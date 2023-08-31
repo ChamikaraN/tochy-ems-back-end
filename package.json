@@ -1,0 +1,43 @@
+{
+  "name": "email-and-employee-management",
+  "version": "1.0.0",
+  "author's contact": "rakibulislam.cse21@gmail.com",
+  "description": "This is an email and employee management web app built in MERN stack",
+  "main": "server.js",
+  "type": "module",
+  "nodemonConfig": {
+    "ignore": [
+      "client/*"
+    ]
+  },
+  "scripts": {
+    "start": "nodemon src/server",
+    "server": "nodemon src/server",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rakibul-Islam-GitHub/airsoft-ecommerce-MERN-stack"
+  },
+  "author": "Rakibul Islam",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rakibul-Islam-GitHub"
+  },
+  "homepage": "https://github.com/Rakibul-Islam-GitHub",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cloudinary": "^1.30.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-async-handler": "^1.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.12",
+    "multer": "^1.4.5-lts.1",
+    "node-cron": "^3.0.2",
+    "nodemailer": "^6.7.8",
+    "nodemon": "^2.0.19",
+    "uuid": "^9.0.0"
+  }
+}
