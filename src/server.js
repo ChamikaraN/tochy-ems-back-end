@@ -18,6 +18,7 @@ import cron from "node-cron";
 // import { getAllBusinessList } from './controllers/userController.js'
 import { emailFunc } from "./utils/email/email.js";
 import { deleteEmail } from "./controllers/productController.js";
+import { sendVerificationEmail } from "./utils/email/emailVerification.js";
 
 const storage = multer.diskStorage({});
 
@@ -70,6 +71,11 @@ cron.schedule("35 * * * *", () => {
   console.log("--------------------------------------------------");
 });
 
+// cron.schedule("* * * * *", () => {
+//   console.log("running a task every minute");
+//   emailFunc();
+// });
+
 // emailFunc()
 
 // deleteEmail()
@@ -107,6 +113,8 @@ const PORT = process.env.PORT || 3001;
 //   console.log(`Secure server is listening oN PORT - ${PORT}`);
 // });
 // my comment
+
+sendVerificationEmail();
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

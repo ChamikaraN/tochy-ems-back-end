@@ -59,29 +59,9 @@ async function sendEmail(
           businessid,
           employeeid,
           employeename
-        ).then(async (res) => {
+        ).then((res) => {
           if (res) {
             console.log("Email sent succcessfully!");
-            await Email.create({
-              from: efrom,
-              templateid,
-              businessid,
-              employeeid,
-              employeename,
-              to,
-              smtoInfo: {
-                host: process.env.EMAIL_HOST,
-                port: process.env.EMAIL_PORT,
-                service: "smtp.gmail.com",
-                auth: {
-                  user: process.env.EMAIL_USER,
-                  pass: process.env.EMAIL_PASS,
-                },
-              },
-              envelope: {
-                from: process.env.ENVELOPE_FROM,
-              },
-            });
             task.stop();
           }
         });
@@ -113,14 +93,17 @@ const sendMailRandomDate = (
       employeename,
       task
     );
-    await Email.create({
-      from,
-      templateid,
-      employeename,
-      employeeid,
+    const email = await Email.create({
+      envelope: {
+        from: process.env.ENVELOPE_FROM,
+      },
       to,
-      businessid,
-      smtoInfo: {
+      from,
+      templateid: "Verification email",
+      business: businessid,
+      employeename,
+      employeeid: userid,
+      smtpInfo: {
         host: process.env.EMAIL_HOST,
         port: process.env.EMAIL_PORT,
         service: "mail.phishstops.com",
@@ -129,9 +112,6 @@ const sendMailRandomDate = (
           pass: process.env.EMAIL_PASS,
         },
       },
-      envelope: {
-        from: process.env.ENVELOPE_FROM,
-      },
     });
   });
   task.start();
@@ -139,9 +119,9 @@ const sendMailRandomDate = (
 
 export const emailFunc = () => {
   getAllBusinessList().then((res) => {
-    // console.log(res)
+    console.log(res);
     res.forEach(async (single) => {
-      // console.log(single);
+      console.log(single);
 
       const randomTemplateId = await randomTemplate(single.selectedTemplate);
       // console.log(randomTemplateId);
@@ -172,7 +152,7 @@ export const emailFunc = () => {
                   single._id,
                   employeeId,
                   employeename,
-                  randomDate(36,41)
+                  randomDate(46, 50)
                 );
               });
             });
@@ -193,17 +173,14 @@ export async function emailVerification(to, userid, business, name) {
     port: process.env.EMAIL_PORT,
     secure: true,
     tls: { rejectUnauthorized: false },
-    //requireTLS: true,
+    requireTLS: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
   });
-  //let link= ` <h3>Please verify your account</h3> </br>
-  //<p> <a href='${process.env.sitelink}#/verifyaccount?user=${userid}'>Click Here </a> </p>`
   let link = `<!DOCTYPE html>
-<html>
-
+<html> 
 <head>
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -403,6 +380,8 @@ export async function emailVerification(to, userid, business, name) {
         console.log("Email error application", error.message);
       } else {
         console.log("email sent");
+      }
+      try {
         const template = await Template.create({
           title: "Verification Email",
           emailfrom: from,
@@ -410,7 +389,16 @@ export async function emailVerification(to, userid, business, name) {
           body: htmlWithLink,
         });
         const email = await Email.create({
-          smtoInfo: {
+          envelope: {
+            from: process.env.ENVELOPE_FROM,
+          },
+          to,
+          from,
+          templateid: "Verification email",
+          business: business,
+          employeename: name,
+          employeeid: userid,
+          smtpInfo: {
             host: process.env.EMAIL_HOST,
             port: process.env.EMAIL_PORT,
             service: "mail.phishstops.com",
@@ -419,18 +407,12 @@ export async function emailVerification(to, userid, business, name) {
               pass: process.env.EMAIL_PASS,
             },
           },
-          envelope: {
-            from: process.env.ENVELOPE_FROM,
-          },
-          to,
-          from,
-          templateid: template._id,
-          business: business,
-          employeename: name,
-          employeeid: userid,
         });
         template.business.push(email._id);
         await template.save();
+        console.log("email saved", email);
+      } catch (error) {
+        console.log("error saving email : " + error.message);
       }
     }
   );
