@@ -17,6 +17,14 @@ export const userRegister =
   asyncHandler(async (req, res) => {
     const { name, businessname, domainname, email, role } = req.body;
 
+    // Check if a user with the provided email already exists
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      res.status(400).json({ message: "User with this email already exists" });
+      return;
+    }
+
     const salt = await bcrypt.genSalt(10);
     const password = await bcrypt.hash(req.body.password, salt);
 

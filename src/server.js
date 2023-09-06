@@ -61,25 +61,6 @@ app.use(cors());
 // });
 connectDB();
 
-// cron.schedule('0 0 1 * *', () => { // Every month and then randomly for each reciever
-
-cron.schedule("35 * * * *", () => {
-  //test check
-  console.log("--------------------------------------------------\n\n");
-  // console.log('Cron Task - READ - Time: ' + (new Date()));
-  emailFunc();
-  console.log("--------------------------------------------------");
-});
-
-// cron.schedule("* * * * *", () => {
-//   console.log("running a task every minute");
-//   emailFunc();
-// });
-
-// emailFunc()
-
-// deleteEmail()
-
 app.get("/", (req, res) => {
   res.json("API server running");
 });
