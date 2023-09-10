@@ -3,9 +3,8 @@ import User from "../Models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
-import { emailVerification } from "../utils/email/email.js";
 import { addPrimaryDomain } from "./domainController.js";
-import { sendVerificationEmail } from "../utils/email/emailVerification.js";
+import { sendVerificationEmailService } from "../services/emailVerification.js";
 
 /// new user register
 /// public route
@@ -38,8 +37,12 @@ export const userRegister =
     });
 
     if (user) {
-      // emailVerification(user.email, user._id, user.businessname, user.name);
-      sendVerificationEmail(user.email, user._id, user.businessname, user.name);
+      sendVerificationEmailService(
+        "Phishstops <sendit@phishstops.com>",
+        user.email,
+        "Account Verification",
+        user._id
+      );
       const token = jwt.sign(
         { id: user._id, email: user.email, role: user.role },
         process.env.JWT_SECRET,

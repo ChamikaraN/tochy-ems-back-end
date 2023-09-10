@@ -21,7 +21,6 @@ const templateSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     image: { type: String, default: null },
     imagePublicId: [
       {
@@ -33,6 +32,9 @@ const templateSchema = mongoose.Schema(
 
     body: {
       type: String,
+    },
+    publicAccess: {
+      type: Boolean, default: false
     },
   },
   {

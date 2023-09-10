@@ -17,8 +17,7 @@ import multer from "multer";
 import cron from "node-cron";
 // import { getAllBusinessList } from './controllers/userController.js'
 import { emailFunc } from "./utils/email/email.js";
-import { deleteEmail } from "./controllers/productController.js";
-import { sendVerificationEmail } from "./utils/email/emailVerification.js";
+import { deleteEmail } from "./controllers/productController.js"; 
 
 const storage = multer.diskStorage({});
 
@@ -95,7 +94,6 @@ const PORT = process.env.PORT || 3001;
 // });
 // my comment
 
-sendVerificationEmail();
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);
