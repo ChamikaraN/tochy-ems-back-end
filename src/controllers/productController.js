@@ -11,14 +11,19 @@ export const getAllTemplates =
   ("/",
   asyncHandler(async (req, res) => {
     try {
-      const templates = await Template.find();
-
+      const selectedBusinessId = req.user._id;
+      const templates = await Template.find({
+        $or: [
+          { "business.id": selectedBusinessId },
+          { publicAccess: true, "business.id": { $ne: selectedBusinessId } },
+        ],
+      });
       res.json(templates);
     } catch (error) {
       res.json(error.message);
     }
   }));
-  
+
 /// fetching all sent email
 /// private route
 /// api/template/sentemail
@@ -54,7 +59,7 @@ export const createTemplate =
   asyncHandler(async (req, res) => {
     // console.log(req.body.image[1]);
 
-    let { title, subject, emailfrom, image, body,publicAccess } = req.body;
+    let { title, subject, emailfrom, image, body, publicAccess } = req.body;
 
     if (image) {
       // image.push('https://via.placeholder.com/600x800')
@@ -73,7 +78,7 @@ export const createTemplate =
 
         try {
           const template = new Template({
-            business: {id:req.user._id,name:req.user.name},
+            business: { id: req.user._id, name: req.user.name },
             title,
             subject,
             emailfrom,
@@ -98,12 +103,12 @@ export const createTemplate =
     } else {
       try {
         const template = new Template({
-          business: {id:req.user._id,name:req.user.name},
+          business: { id: req.user._id, name: req.user.name },
           title,
           subject,
           emailfrom,
           body,
-          publicAccess
+          publicAccess,
         });
 
         const productAddDone = await template.save();
