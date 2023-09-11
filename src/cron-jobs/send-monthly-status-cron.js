@@ -6,7 +6,7 @@ import sendEmailUtil from "../utils/sendEmail.js";
 const sendMonthlyStatusCron = async () => {
   try {
     // Set up the cron job to run every 5 seconds (adjust as needed)
-    cron.schedule("*/5 * * * * *", async () => {
+    cron.schedule("0 0 1 * * *", async () => {
       const usersWithBusinessRole = await User.find({ role: "business" });
 
       for (const user of usersWithBusinessRole) {
