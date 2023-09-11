@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { v4 as uuidv4 } from "uuid";
 import { addPrimaryDomain } from "./domainController.js";
-import { sendVerificationEmailService } from "../services/emailVerification.js";
+import sendVerificationEmailService from "../services/sendEmailVerification.js";
 
 /// new user register
 /// public route

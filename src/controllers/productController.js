@@ -3,6 +3,8 @@ import Email from "../Models/emailModel.js";
 import Template from "../Models/templateModel.js";
 import cloudinary from "../utils/cloudinary.js";
 import { incrementEmailOpenedCount } from "./employeeController.js";
+import User from "../Models/userModel.js";
+import sendEmailUtil from "../utils/sendEmail.js";
 
 /// fetching all template
 /// public route
@@ -151,18 +153,22 @@ export const makeEmailRead =
     // return
     try {
       const template = await Email.findOneAndUpdate(
-        { templateid: req.body.templateid, employeeid: req.body.empid },
+        {
+          _id: req.body.templateid,
+          employeeid: req.body.empid,
+          seen: false,
+        },
         { seen: true }
       );
       incrementEmailOpenedCount(req.body.empid);
       if (template) {
+        await notifyBusinessOwner(template.business);
         res.json({ success: true, message: "template updated successfully" });
       } else {
-        res.status(200);
-        // throw new Error("Internal error");
+        res.status(500);
       }
     } catch (error) {
-      res.status(200);
+      res.status(500);
       console.log("error");
       res.json({ success: false, message: "template not found" });
     }
@@ -225,4 +231,20 @@ export const deleteEmail = async () => {
   } else {
     console.log("problem with delete");
   }
+};
+
+const notifyBusinessOwner = async (businessId) => {
+  const user = await User.findOne({ _id: businessId });
+  if (user) {
+    const url = `${process.env.sitelink}#/template/employee`;
+    sendEmailUtil(
+      "Phishstops <sendit@phishstops.com>",
+      user.email,
+      "New User Click On the Link",
+      `<a href="${url}">
+       <button>View User</button>
+       </a>`
+    );
+  }
+  console.log(user);
 };

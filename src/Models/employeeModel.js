@@ -10,7 +10,6 @@ const employeeSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-
     email: {
       type: String,
       required: true,

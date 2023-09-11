@@ -250,7 +250,6 @@ export const addReview =
 export const getEmployeeList = async (businessid) => {
   try {
     const emp = await Employee.find({ "business.id": businessid });
-    // console.log(business);
     return emp;
   } catch (error) {
     return false;
@@ -264,7 +263,6 @@ export const incrementEmailSentCount = async (employeeid) => {
       { _id: employeeid },
       { $inc: { mailsent: 1 } }
     );
-    // console.log(business);
     return;
   } catch (error) {
     return false;
@@ -278,9 +276,60 @@ export const incrementEmailOpenedCount = async (employeeid) => {
       { _id: employeeid },
       { $inc: { mailopened: 1 } }
     );
-    // console.log(business);
     return;
   } catch (error) {
     return false;
   }
 };
+
+export const updateNextEmailDate = async (employeeid) => {
+  try {
+    const currentDate = new Date();
+    const nextmaildate = getRandomDateWithinRange(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 2, 0)
+    );
+
+    const emp = await Employee.findOneAndUpdate(
+      { _id: employeeid },
+      { nextmaildate }
+    );
+    return;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+};
+
+export async function getTotalMailStatsByBusiness(businessId) {
+  try {
+    // Convert the businessId to a string
+    const businessIdString = businessId.toString();
+
+    const pipeline = [
+      {
+        $match: {
+          "business.id": businessIdString,
+        },
+      },
+      {
+        $group: {
+          _id: "$business.id",
+          totalMailsSent: { $sum: "$mailsent" },
+          totalMailsOpened: { $sum: "$mailopened" },
+        },
+      },
+    ];
+
+    const result = await Employee.aggregate(pipeline);
+
+    if (result.length > 0) {
+      const { totalMailsSent, totalMailsOpened } = result[0];
+      return { totalMailsSent, totalMailsOpened };
+    } else {
+      console.log("No employees found for the given business ID.");
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}

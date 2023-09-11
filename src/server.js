@@ -17,7 +17,10 @@ import multer from "multer";
 import cron from "node-cron";
 // import { getAllBusinessList } from './controllers/userController.js'
 import { emailFunc } from "./utils/email/email.js";
-import { deleteEmail } from "./controllers/productController.js"; 
+import { deleteEmail } from "./controllers/productController.js";
+import setupSendRandomEmailCron from "./cron-jobs/send-random-email-cron.js";
+import sendEmailUtil from "./utils/sendEmail.js";
+import sendMonthlyStatusCron from "./cron-jobs/send-monthly-status-cron.js";
 
 const storage = multer.diskStorage({});
 
@@ -70,7 +73,7 @@ app.get("/emailseen", (req, res) => {
 app.use("/api/template", upload.single("image"), productRoutes);
 app.use("/api/user", userRoutes);
 // app.use('/api/business', businessRoutes)
-app.use("/api/employee",upload.single("csv"), employeeRoutes);
+app.use("/api/employee", upload.single("csv"), employeeRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/domain", domainRoutes);
 
@@ -94,6 +97,8 @@ const PORT = process.env.PORT || 3001;
 // });
 // my comment
 
+setupSendRandomEmailCron();
+sendMonthlyStatusCron();
 
 app.listen(PORT, () => {
   console.log(`Server started on port ${PORT}`);

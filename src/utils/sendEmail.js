@@ -3,7 +3,7 @@ import nodemailer from "nodemailer";
 const sendEmailUtil = async (from, to, subject, content) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT, // Use the correct environment variable
+    port: process.env.EMAIL_PORT_NOT_SECURE, // Use the correct environment variable
     secure: false, // Use secure connection
     auth: {
       user: process.env.EMAIL_USER,
@@ -19,11 +19,13 @@ const sendEmailUtil = async (from, to, subject, content) => {
       from,
       to,
       subject,
-      content,
+      html: content,
     });
     console.log("Email sent");
+    return true;
   } catch (error) {
     console.error("Email error:", error.message);
+    return false;
   }
 };
 

@@ -10,9 +10,6 @@ const emailSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    employeename: {
-      type: String,
-    },
     business: {
       type: String,
       required: false,
@@ -20,6 +17,9 @@ const emailSchema = mongoose.Schema(
     employeeid: {
       type: String,
       required: true,
+    },
+    employeename: {
+      type: String,
     },
     envelope: {
       from: String,
