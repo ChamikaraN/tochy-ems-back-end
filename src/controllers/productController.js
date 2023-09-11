@@ -18,6 +18,7 @@ export const getAllTemplates =
       res.json(error.message);
     }
   }));
+  
 /// fetching all sent email
 /// private route
 /// api/template/sentemail
@@ -72,6 +73,7 @@ export const createTemplate =
 
         try {
           const template = new Template({
+            business: {id:req.user._id,name:req.user.name},
             title,
             subject,
             emailfrom,
@@ -96,6 +98,7 @@ export const createTemplate =
     } else {
       try {
         const template = new Template({
+          business: {id:req.user._id,name:req.user.name},
           title,
           subject,
           emailfrom,

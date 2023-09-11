@@ -2,13 +2,11 @@ import mongoose from "mongoose";
 
 const templateSchema = mongoose.Schema(
   {
-    business: [
-      {
-        type: Array,
-        default: ["all"],
-        required: false,
-      },
-    ],
+    business: {
+      id: {type: String},
+      name: { type: String },
+      required: false,
+    },
     title: {
       type: String,
       required: true,

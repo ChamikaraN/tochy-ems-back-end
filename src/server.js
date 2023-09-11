@@ -70,7 +70,7 @@ app.get("/emailseen", (req, res) => {
 app.use("/api/template", upload.single("image"), productRoutes);
 app.use("/api/user", userRoutes);
 // app.use('/api/business', businessRoutes)
-app.use("/api/employee", employeeRoutes);
+app.use("/api/employee",upload.single("csv"), employeeRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/domain", domainRoutes);
 

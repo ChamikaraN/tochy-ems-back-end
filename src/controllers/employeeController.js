@@ -64,6 +64,39 @@ export const createEmployee= ('/', asyncHandler(async (req, res)=>{
 
 }))
 
+/// add new employee
+/// private route
+/// api/employee/add
+export const importEmployee= ('/', asyncHandler(async (req, res)=>{
+  const {
+    name,
+    email,
+    phone
+  } = req.body;
+  let txtdnsrndstring= uuidv4();
+  const employee = new Employee({
+     business: {id:req.user._id,name:req.user.name},
+     name,
+     email,
+     phone,
+     txtdnsrndstring
+      
+    })
+
+  const employeeDone= await employee.save()
+
+  if (employeeDone) {
+      res.json(employeeDone)
+      
+  }
+  else {
+      res.status(404)
+      throw new Error('Problem with creating employee')
+  }
+
+
+}))
+
 
 /// update Employee 
 /// private route
